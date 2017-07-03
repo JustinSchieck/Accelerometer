@@ -63,15 +63,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         valueY = event.values[1];
         valueZ = event.values[2];
 
-        x = Double.parseDouble(String.valueOf(valueX));
-        y = Double.parseDouble(String.valueOf(valueY));
-        z = Double.parseDouble(String.valueOf(valueZ));
+//        x = Double.parseDouble(String.valueOf(valueX));
+//        y = Double.parseDouble(String.valueOf(valueY));
+//        z = Double.parseDouble(String.valueOf(valueZ));
 
 
-        acceleration.setText("X: " + x +
-                "\nY: " + y +"\nZ: " + z);
-        data = (localTime + "," + x +
-                        "," + y + "," + z + "," + "\n" );
+        acceleration.setText("X: " + valueX +
+                "\nY: " + valueY +"\nZ: " + valueZ);
+        data = (localTime + "," + valueX +
+                        "," + valueY + "," + valueZ + "," + "\n" );
         i++;
         writeData();
 
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            }
     }
 
-    public void writeData(){
+       public void writeData(){
 
         try {
             writeToFile(data);
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             path.mkdirs();
         }
 
-        File file = new File(path, "Data.csv");
+        File file = new File(path, "Accel_Data.csv");
         try
         {
             file.createNewFile();
