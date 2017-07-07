@@ -22,12 +22,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     String data;
 //    DateFormat time = new SimpleDateFormat("HH:mm");
     Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
-    Date currentLocalTime = cal.getTime();
-    DateFormat date = new SimpleDateFormat("HH:mm:ss a");
+
+    SimpleDateFormat date = new SimpleDateFormat("HH:mm:ss");
+    Date currentLocalTime = new Date();
     // you can get seconds by adding  "...:ss" to it
     String localTime = date.format(currentLocalTime);
 
-
+    int i = 0;
 
     //methods
     String path =
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     File folder = new File(path);
 
     // Create the file.
-    File file = new File(folder, "Data.txt");
+    File file = new File(folder, "Data.csv");
 
 
     @Override
@@ -53,12 +54,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-       int i=0;
-//
-//        for (i = 0; i < 4; i++)
-//            if (i != 4) {
         float valueX, valueY, valueZ;
-        double x,y,z;
+        double x, y, z;
         valueX = event.values[0];
         valueY = event.values[1];
         valueZ = event.values[2];
@@ -69,32 +66,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         acceleration.setText("X: " + valueX +
-                "\nY: " + valueY +"\nZ: " + valueZ);
+                "\nY: " + valueY + "\nZ: " + valueZ);
         data = (localTime + "," + valueX +
-                        "," + valueY + "," + valueZ + "," + "\n" );
-        i++;
-        writeData();
-
+                "," + valueY + "," + valueZ + "," + "\n");
+//        i++;
+//        writeData();
 
 
         //if statement for delay in writeData
 
-//        if(i == 10){
-//
-//                    writeData();
-//                    i = 0;
-//                }
+        if (i != 10) {
 
-//                 writeData();
-//                i = 0;
-//            } else {
-//                acceleration.setText("X: " + event.values[0] +
-//                        "\nY: " + event.values[1] +
-//                        "\nZ: " + event.values[2]);
-//                data = (localTime + "," + event.values[0] +
-//                        "," + event.values[1] +
-//                        "," + event.values[2]);
-//            }
+            i++;
+        } else {
+
+            writeData();
+            i = 0;
+        }
     }
 
        public void writeData(){
@@ -114,22 +102,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    public void writeToFile(String data)
-    {
+    public void writeToFile(String data) {
         final File path =
                 Environment.getExternalStoragePublicDirectory
                         (
                                 Environment.DIRECTORY_DCIM + "/Accel_Data/"
                         );
 
-        if(!path.exists())
-        {
+        if (!path.exists()) {
             path.mkdirs();
         }
 
         File file = new File(path, "Accel_Data.csv");
-        try
-        {
+        try {
             file.createNewFile();
             FileOutputStream fOut = new FileOutputStream(file, true);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
@@ -137,17 +122,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             myOutWriter.close();
 
-           // fOut.flush();
+            fOut.flush();
             fOut.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 
-    public void Pedometer(){
 
-    }
 
 }
