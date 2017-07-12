@@ -1,7 +1,9 @@
 package com.example.justin.accelerometer_test;
 
+        import android.content.Context;
         import android.hardware.*;
         import android.os.Environment;
+        import android.os.PowerManager;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
@@ -26,9 +28,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //    // you can get seconds by adding  "...:ss" to it
 //    String localTime = date.format(currentLocalTime);
 
-
-
-    int i = 0;
+    PowerManager.WakeLock wl;
 
 
     //Android onCreate Method
@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         acceleration = (TextView)findViewById(R.id.acceleration);
+
+        //Keeps program running during locked device
+        PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
+
+        wl.acquire();
     }
 
     //Android Sensor Change Method, Runs Every time the sensor Changes accuracy
@@ -73,12 +79,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //if statement for delay in writeData
 
-        if (i != 10) {
-            i++;
-        } else {
-            writeData();
-            i = 0;
-        }
+
+        new java.util.Timer().schedule(
+                new java.util.TimerTask(){
+                    @Override
+                    public void run(){
+                        writeData();
+                    }
+                },
+                1000
+        );
     }
 
        public void writeData(){
